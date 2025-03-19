@@ -18,6 +18,7 @@ public class ProfileController {
 
     @PostMapping("/sync-user")
     ResponseEntity<ApiResponse<Boolean>> syncUserFromAuthentication(@RequestBody UserSyncDto syncDto){
+        // todo : this is temporary to be replaced by kafka consumer
         Boolean syncResponse = profileService.syncUserFromAuthentication(syncDto);
         ApiResponse<Boolean> response = new ApiResponse<>(new Meta("sync success",true),syncResponse);
         return ResponseEntity.ok(response);
