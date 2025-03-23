@@ -33,7 +33,7 @@ public class ProfileResponse {
 
     private UserType userType;
 
-    private List<Experience> experienceList;
+    private List<ExperienceReponse> experienceList;
 
-    private BigDecimal avgRating; // only for mentor
+    private Double avgRating; // only for mentor
 }

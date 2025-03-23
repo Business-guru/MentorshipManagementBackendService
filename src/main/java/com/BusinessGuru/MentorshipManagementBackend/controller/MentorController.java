@@ -1,9 +1,78 @@
 package com.BusinessGuru.MentorshipManagementBackend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.BusinessGuru.MentorshipManagementBackend.Dto.MiniMentor;
+import com.BusinessGuru.MentorshipManagementBackend.Dto.PlanDto;
+import com.BusinessGuru.MentorshipManagementBackend.commons.ApiResponse;
+import com.BusinessGuru.MentorshipManagementBackend.commons.Meta;
+import com.BusinessGuru.MentorshipManagementBackend.entities.MentorshipPlan;
+import com.BusinessGuru.MentorshipManagementBackend.services.MentorshipService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+//@RestController
+//@RequestMapping("/mentor")
+//public class MentorController {
+//
+//    @Autowired
+//    private MentorshipService mentorshipService;
+//
+//    @GetMapping("/getAllMentors")
+//    ResponseEntity<ApiResponse<List<MiniMentor>>> getAllMentors(){
+//        List<MiniMentor> mentorList = mentorshipService.getAllMentors();
+//        ApiResponse<List<MiniMentor>> response = new ApiResponse<>(new Meta("mentorlist fetched successfully",true),mentorList);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//}
+
 
 @RestController
 @RequestMapping("/mentor")
 public class MentorController {
+
+    @Autowired
+    private MentorshipService mentorshipService;
+
+    @GetMapping("/getAllMentors")
+    ResponseEntity<ApiResponse<Page<MiniMentor>>> getAllUsers(
+            @RequestParam(required = false) List<String> skills,
+            @RequestParam(defaultValue = "avgRating") String sortBy,
+            @RequestParam(defaultValue = "desc") String order,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<MiniMentor> userList = mentorshipService.getAllMentors(skills, sortBy, order, page, size);
+        ApiResponse<Page<MiniMentor>> response = new ApiResponse<>(new Meta("Mentor list fetched successfully", true), userList);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/searchMentors")
+    ResponseEntity<ApiResponse<Page<MiniMentor>>> searchMentors(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<MiniMentor> searchResults = mentorshipService.searchMentors(query, page, size);
+        ApiResponse<Page<MiniMentor>> response = new ApiResponse<>(new Meta("Search results fetched successfully", true), searchResults);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/createMentorshipPlan")
+    ResponseEntity<ApiResponse<PlanDto>> createPlan(@RequestHeader(name = "x-user-id") String userId, @RequestBody PlanDto planDto){
+        PlanDto plan = mentorshipService.createPlan(userId,planDto);
+        ApiResponse<PlanDto> response = new ApiResponse<>(new Meta("plan created successfully",true),plan);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getAllPlansOfMentor")
+    ResponseEntity<ApiResponse<List<PlanDto>>> getAllPlans(@RequestHeader(name = "x-user-id")String userId){
+        List<PlanDto> mentorshipPlanList = mentorshipService.getAllPlansOfMentor(userId);
+        ApiResponse< List<PlanDto>> response = new ApiResponse<>(new Meta("plans fetched successfully",true),mentorshipPlanList);
+        return ResponseEntity.ok(response);
+    }
+
 }
