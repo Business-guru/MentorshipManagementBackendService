@@ -1,24 +1,18 @@
 package com.BusinessGuru.MentorshipManagementBackend.Dto;
 
-import com.BusinessGuru.MentorshipManagementBackend.entities.Experience;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileRequest {
-
-    private List<String> skills;
-
-    private String about;
-
+public class MiniMentor {
+    private String userId;
+    private String name;
     private String bio;
-
-    private List<Experience> experienceList;
-
+    private List<String> skills;
+    private Double avgRating;
 }

@@ -2,6 +2,7 @@ package com.BusinessGuru.MentorshipManagementBackend.entities;
 
 import com.BusinessGuru.MentorshipManagementBackend.commons.BaseEntity;
 import com.BusinessGuru.MentorshipManagementBackend.enums.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,18 +30,20 @@ public class UserProfile extends BaseEntity {
 
     private String email;
 
-    private Set<String> skills;
+    @ElementCollection
+    private List<String> skills;
 
     private String about;
 
     private String bio;
 
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
     private List<Experience> experienceList;
 
-    private BigDecimal avgRating; // only for mentor
+    private Double avgRating; // only for mentor
 
     private Boolean isProfileCompleted;
 }
