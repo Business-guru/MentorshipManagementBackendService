@@ -12,13 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentDTO {
 
-    private String userId;
-
-    private String blogId;
-
     private String comment;
 
-    private List<Comment> replies;
+    private List<CommentDTO> replies;
 
-    private Comment parentComment;
+    public CommentDTO(String comment) {
+        this.comment = comment;
+    }
 }

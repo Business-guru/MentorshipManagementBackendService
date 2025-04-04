@@ -1,6 +1,8 @@
 package com.BusinessGuru.MentorshipManagementBackend.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +31,6 @@ public class Experience {
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
+    @JsonIgnore
     private UserProfile userProfile;
 }
