@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BlogDTOResponse {
+    private String id;
     private String title;
 
     private Set<String> category;
