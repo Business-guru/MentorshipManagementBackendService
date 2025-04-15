@@ -13,22 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/mentor")
-//public class MentorController {
-//
-//    @Autowired
-//    private MentorshipService mentorshipService;
-//
-//    @GetMapping("/getAllMentors")
-//    ResponseEntity<ApiResponse<List<MiniMentor>>> getAllMentors(){
-//        List<MiniMentor> mentorList = mentorshipService.getAllMentors();
-//        ApiResponse<List<MiniMentor>> response = new ApiResponse<>(new Meta("mentorlist fetched successfully",true),mentorList);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//}
-
 
 @RestController
 @RequestMapping("/mentor")

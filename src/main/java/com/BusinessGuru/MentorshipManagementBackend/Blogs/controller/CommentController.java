@@ -1,6 +1,8 @@
 package com.BusinessGuru.MentorshipManagementBackend.Blogs.controller;
 
+import com.BusinessGuru.MentorshipManagementBackend.Blogs.Dto.AllCommentsResponse;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.Dto.CommentDTO;
+import com.BusinessGuru.MentorshipManagementBackend.Blogs.Dto.ReplyDTO;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.entities.Comment;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.service.CommentService;
 import com.BusinessGuru.MentorshipManagementBackend.commons.ApiResponse;
@@ -28,16 +30,16 @@ public class CommentController {
     public ResponseEntity<ApiResponse<CommentDTO>> replyToComment(@PathVariable(name = "postId") String postId,
                                                                   @PathVariable(name = "parentCommentId") String parentCommentId,
                                                                   @RequestHeader(name = "x-user-id") String userId,
-                                                                  @RequestBody CommentDTO commentDTO) {
-        CommentDTO commentRes = commentService.replyToComment(postId, userId, parentCommentId, commentDTO);
+                                                                  @RequestBody ReplyDTO replyDTO) {
+        CommentDTO commentRes = commentService.replyToComment(postId, userId, parentCommentId, replyDTO);
         ApiResponse<CommentDTO> response = new ApiResponse<>(new Meta("Reply added successfully", true), commentRes);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("comments-with-replies/{postId}")
-    public ResponseEntity<ApiResponse<List<CommentDTO>>> getCommentsWithReplies(@PathVariable(name = "postId") String postId) {
-        List<CommentDTO> commentsRes = commentService.getCommentsWithReplies(postId);
-        ApiResponse<List<CommentDTO>> response = new ApiResponse<>(new Meta("Comments and replies fetched successfully", true), commentsRes);
+    public ResponseEntity<ApiResponse<List<AllCommentsResponse>>> getCommentsWithReplies(@PathVariable(name = "postId") String postId) {
+        List<AllCommentsResponse> commentsRes = commentService.getCommentsWithReplies(postId);
+        ApiResponse<List<AllCommentsResponse>> response = new ApiResponse<>(new Meta("Comments and replies fetched successfully", true), commentsRes);
         return ResponseEntity.ok(response);
     }
 
