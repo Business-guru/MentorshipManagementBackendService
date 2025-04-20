@@ -18,7 +18,7 @@ public class BlogDTOResponse {
     private String id;
     private String title;
 
-    private Set<String> category;
+    private List<String> categories;
 
     private String content;
 

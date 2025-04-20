@@ -14,7 +14,7 @@ import java.util.Set;
 public class BlogDto {
     private String title;
 
-    private Set<String> category;
+    private List<String> categories;
 
     private String content;
 

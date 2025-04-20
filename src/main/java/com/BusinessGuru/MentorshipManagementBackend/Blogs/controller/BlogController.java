@@ -6,10 +6,12 @@ import com.BusinessGuru.MentorshipManagementBackend.Blogs.service.BlogService;
 import com.BusinessGuru.MentorshipManagementBackend.commons.ApiResponse;
 import com.BusinessGuru.MentorshipManagementBackend.commons.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,8 +27,8 @@ public class BlogController {
                                                                    @RequestParam("content") String content,
                                                                    @RequestParam("tags") List<String> tags,
                                                                    @RequestParam("category") Set<String> category,
-                                                                   @RequestParam("images") List<MultipartFile> images){
-        BlogDto blogDto = new BlogDto(title,category,content,images,tags,userId);
+                                                                   @RequestParam(value = "images", required = false) List<MultipartFile> images){
+        BlogDto blogDto = new BlogDto(title,new ArrayList<>(category),content,images,tags,userId);
         BlogDTOResponse savedRes = blogService.createBlog(blogDto);
         ApiResponse<BlogDTOResponse> response = new ApiResponse<>(new Meta("post created successfully",true),savedRes);
         return ResponseEntity.ok(response);
@@ -57,6 +59,29 @@ public class BlogController {
         ApiResponse<BlogDTOResponse> response = new ApiResponse<>(new Meta("post liked successfully", true),likeRes);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getAllBlogsofUser/{userId}")
+    public ResponseEntity<ApiResponse<List<BlogDTOResponse>>> getAllBlogsOfUser(@PathVariable(name = "userId") String userId){
+        List<BlogDTOResponse> getRes = blogService.getAllBlogsOfUser(userId);
+        ApiResponse<List<BlogDTOResponse>> response = new ApiResponse<>(new Meta("post fetched successfully", true),getRes);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getAllBlogs")
+    public ResponseEntity<ApiResponse<Page<BlogDTOResponse>>> getAllBlogs(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<BlogDTOResponse> getRes = blogService.getAllBlogs(categories, userId, keyword, sortBy, direction, page, size);
+        ApiResponse<Page<BlogDTOResponse>> response = new ApiResponse<>(new Meta("Posts fetched successfully", true), getRes);
+        return ResponseEntity.ok(response);
+    }
+
 
 
 
