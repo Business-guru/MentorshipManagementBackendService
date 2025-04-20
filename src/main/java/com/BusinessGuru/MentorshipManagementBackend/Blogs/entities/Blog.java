@@ -23,7 +23,8 @@ public class Blog extends BaseEntity {
     @NonNull
     private String title;
 
-    private Set<String> category;
+    @ElementCollection
+    private List<String> categories;
 
     private String content;
 
