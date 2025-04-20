@@ -48,7 +48,7 @@ public class BlogService {
         blog.setCategories(blogDTO.getCategories());
         blog.setLikes(0);
         List<String> images = new ArrayList<>();
-        if (blogDTO.getImages().size() > 2) {
+        if (blogDTO.getImages()!=null && blogDTO.getImages().size() > 2) {
 
             // todo : throw appropriate exception
 //            throw new ApiException("only 2 images are allowed");
