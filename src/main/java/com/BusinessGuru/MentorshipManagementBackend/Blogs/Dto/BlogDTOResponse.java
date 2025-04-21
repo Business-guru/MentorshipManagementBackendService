@@ -31,4 +31,6 @@ public class BlogDTOResponse {
     private Date updatedAt;
 
     private Integer likes;
+
+    private List<String> images;
 }
