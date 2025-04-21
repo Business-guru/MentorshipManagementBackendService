@@ -70,14 +70,12 @@ public class BlogController {
     @GetMapping("/getAllBlogs")
     public ResponseEntity<ApiResponse<Page<BlogDTOResponse>>> getAllBlogs(
             @RequestParam(required = false) List<String> categories,
-            @RequestParam(required = false) String userId,
-            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<BlogDTOResponse> getRes = blogService.getAllBlogs(categories, userId, keyword, sortBy, direction, page, size);
+        Page<BlogDTOResponse> getRes = blogService.getAllBlogs(categories, sortBy, direction, page, size);
         ApiResponse<Page<BlogDTOResponse>> response = new ApiResponse<>(new Meta("Posts fetched successfully", true), getRes);
         return ResponseEntity.ok(response);
     }
