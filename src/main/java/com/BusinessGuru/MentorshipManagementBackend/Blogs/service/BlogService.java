@@ -113,7 +113,7 @@ public class BlogService {
         return blogDTOResponseList;
     }
 
-    public Page<BlogDTOResponse> getAllBlogs(List<String> categories, String userId, String keyword,
+    public Page<BlogDTOResponse> getAllBlogs(List<String> categories,
                                              String sortBy, String direction, int page, int size) {
 
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
