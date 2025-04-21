@@ -28,4 +28,10 @@ public class MentorshipPlan extends BaseEntity {
     private String description;
 
     private List<String> features;
+
+    private Integer totalSlots;
+
+    private Integer currentSlots;
+
+    private Integer duration;
 }

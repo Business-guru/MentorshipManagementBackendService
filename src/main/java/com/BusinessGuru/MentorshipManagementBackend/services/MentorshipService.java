@@ -3,14 +3,13 @@ package com.BusinessGuru.MentorshipManagementBackend.services;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.MiniMentor;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.PlanDto;
 import com.BusinessGuru.MentorshipManagementBackend.entities.MentorshipPlan;
+import com.BusinessGuru.MentorshipManagementBackend.entities.PlanUserMap;
 import com.BusinessGuru.MentorshipManagementBackend.entities.UserProfile;
+import com.BusinessGuru.MentorshipManagementBackend.enums.PlanStatus;
 import com.BusinessGuru.MentorshipManagementBackend.enums.UserType;
 import com.BusinessGuru.MentorshipManagementBackend.repository.PlanRepository;
+import com.BusinessGuru.MentorshipManagementBackend.repository.PlanUserMapRepository;
 import com.BusinessGuru.MentorshipManagementBackend.repository.UserProfileRepository;
-import jakarta.security.auth.message.AuthException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,41 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
-//@Service
-//public class MentorshipService {
-//
-//    @Autowired
-//    private UserProfileRepository profileRepository;
-//
-//    public List<MiniMentor> getAllMentors() {
-//        List<UserProfile> mentorList = profileRepository.findByUserType(UserType.MENTOR);
-//        List<MiniMentor> miniMentorList = miniMentorMapper(mentorList);
-//        return miniMentorList;
-//    }
-//
-//    private List<MiniMentor> miniMentorMapper(List<UserProfile> userProfileList){
-//        List<MiniMentor> miniMentorList = new ArrayList<>();
-//        for(UserProfile profile : userProfileList){
-//            MiniMentor miniMentor = new MiniMentor();
-//            miniMentor.setName(profile.getFirstName()+" "+profile.getLastName());
-//            miniMentor.setBio(profile.getBio());
-//            miniMentor.setUserId(profile.getUserId());
-//            miniMentor.setAvgRating(profile.getAvgRating());
-//            miniMentor.setSkills(profile.getSkills());
-//            miniMentorList.add(miniMentor);
-//        }
-//        return miniMentorList;
-//
-//    }
-//}
+
 
 @Service
 public class MentorshipService {
@@ -67,6 +37,9 @@ public class MentorshipService {
 
     @Autowired
     private PlanRepository planRepository;
+
+    @Autowired
+    private PlanUserMapRepository planUserMapRepository;
 
     public Page<MiniMentor> getAllMentors(List<String> skills, String sortBy, String order, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, order.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
@@ -137,5 +110,39 @@ public class MentorshipService {
 
         Type listType = new TypeToken<List<PlanDto>>() {}.getType();
         return modelMapper.map(planList, listType);
+    }
+
+    public PlanDto subscribePlan(String planId, String userId) {
+        PlanUserMap planUserMap = new PlanUserMap();
+        planUserMap.setPlanId(planId);
+        planUserMap.setUserId(userId);
+        planUserMap.setDatePurchased(System.currentTimeMillis());
+        planUserMap.setStatus(PlanStatus.ACTIVE);
+        planUserMapRepository.save(planUserMap);
+        MentorshipPlan plan = planRepository.findById(planId).get();
+        plan.setCurrentSlots(plan.getCurrentSlots()-1);
+        PlanDto planDto = modelMapper.map(plan, PlanDto.class);
+        return planDto;
+    }
+
+
+    public List<PlanDto> getAllSubscribedPlans(String userId) {
+        List<PlanUserMap> planMaps = planUserMapRepository.findByUserId(userId);
+        List<PlanDto> planDtoList = new ArrayList<>();
+        for(PlanUserMap map : planMaps){
+            MentorshipPlan plan = planRepository.getReferenceById(map.getPlanId());
+            PlanDto planDto = modelMapper.map(plan,PlanDto.class);
+            if(plan.getDuration()*24*3600*1000 + map.getDatePurchased() < System.currentTimeMillis() ){
+                map.setStatus(PlanStatus.EXPIRED);
+                planDto.setPlanStatus(PlanStatus.EXPIRED);
+                planUserMapRepository.save(map);
+            }else {
+                planDto.setPlanStatus(PlanStatus.ACTIVE);
+            }
+            planDtoList.add(planDto);
+        }
+
+        return planDtoList;
+
     }
 }

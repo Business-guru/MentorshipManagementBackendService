@@ -141,7 +141,8 @@ public class BlogService {
                 blog.getUserId(),
                 blog.getCreatedAt(),
                 blog.getUpdatedAt(),
-                blog.getLikes()
+                blog.getLikes(),
+                blog.getImages()
         );
     }
 

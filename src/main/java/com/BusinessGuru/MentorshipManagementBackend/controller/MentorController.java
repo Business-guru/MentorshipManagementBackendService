@@ -59,4 +59,18 @@ public class MentorController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/subscribePlan/{planId}")
+    ResponseEntity<ApiResponse<PlanDto>> subscribePlan(@PathVariable(name = "planId") String planId, @RequestHeader(name = "x-user-id")String userId){
+        PlanDto planDto = mentorshipService.subscribePlan(planId,userId);
+        ApiResponse<PlanDto> response = new ApiResponse<>(new Meta("subscription added successfully",true),planDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getAllSubscribedPlans")
+    ResponseEntity<ApiResponse<List<PlanDto>>> getAllSubscribedPlans( @RequestHeader(name = "x-user-id")String userId){
+        List<PlanDto> planDtoList = mentorshipService.getAllSubscribedPlans(userId);
+        ApiResponse<List<PlanDto>> response = new ApiResponse<>(new Meta("subscription added successfully",true),planDtoList);
+        return ResponseEntity.ok(response);
+    }
+
 }
