@@ -9,6 +9,7 @@ import com.BusinessGuru.MentorshipManagementBackend.Blogs.entities.ReplyToCommen
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.repository.BlogRepository;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.repository.CommentRepository;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.repository.ReplyRepository;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -50,12 +51,14 @@ public class CommentService {
         // Check if the blog post exists
         Optional<Blog> blogOptional = blogRepository.findById(postId);
         if (blogOptional.isEmpty()) {
+            throw new ResourceNotFoundException("blog","postId",postId);
             // throw new RuntimeException("Blog post not found");
         }
 
         // Find the parent comment that the user is replying to
         Optional<Comment> parentCommentOptional = commentRepository.findById(parentCommentId);
         if (parentCommentOptional.isEmpty()) {
+            throw new ResourceNotFoundException("comment","parentCommentId",parentCommentId);
             // throw new RuntimeException("Parent comment not found");
         }
 
@@ -74,7 +77,7 @@ public class CommentService {
         // Fetch all comments related to the post
         Optional<Blog> blogOptional = blogRepository.findById(postId);
         if (blogOptional.isEmpty()) {
-            throw new RuntimeException("Blog post not found");
+            throw new ResourceNotFoundException("blog","postId",postId);
         }
 
         // Get all parent comments for the blog post

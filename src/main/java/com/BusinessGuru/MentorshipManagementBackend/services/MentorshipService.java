@@ -2,6 +2,8 @@ package com.BusinessGuru.MentorshipManagementBackend.services;
 
 import com.BusinessGuru.MentorshipManagementBackend.Dto.MiniMentor;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.PlanDto;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ApiException;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ResourceNotFoundException;
 import com.BusinessGuru.MentorshipManagementBackend.entities.MentorshipPlan;
 import com.BusinessGuru.MentorshipManagementBackend.entities.PlanUserMap;
 import com.BusinessGuru.MentorshipManagementBackend.entities.UserProfile;
@@ -89,9 +91,11 @@ public class MentorshipService {
         Optional<UserProfile> profile = profileRepository.findByUserId(userId);
 
         if(profile.isEmpty()){
+            throw new ResourceNotFoundException("profile","userId", userId);
             // throw not found exception
         }
         if(profile.get().getUserType().equals(UserType.USER)){
+            throw new ApiException("you are not authorized to do this operation");
             // throw unauthorized error
         }
 
