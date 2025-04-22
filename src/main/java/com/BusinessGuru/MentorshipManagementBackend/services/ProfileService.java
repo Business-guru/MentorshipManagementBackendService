@@ -4,6 +4,7 @@ import com.BusinessGuru.MentorshipManagementBackend.Dto.ExperienceReponse;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.ProfileResponse;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.UserSyncDto;
 import com.BusinessGuru.MentorshipManagementBackend.Dto.ProfileRequest;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ResourceNotFoundException;
 import com.BusinessGuru.MentorshipManagementBackend.entities.Experience;
 import com.BusinessGuru.MentorshipManagementBackend.entities.UserProfile;
 import com.BusinessGuru.MentorshipManagementBackend.repository.ExperienceRepository;
@@ -55,6 +56,7 @@ public class ProfileService {
 
         Optional<UserProfile> userProfileOptional = profileRepository.findByUserId(userId);
         if(userProfileOptional.isEmpty()){
+            throw new ResourceNotFoundException("profile","userId", userId);
             // todo : throw resource not found exception
         }
         UserProfile profile = userProfileOptional.get();
@@ -78,6 +80,7 @@ public class ProfileService {
     public ProfileResponse updateProfile(String userId, ProfileRequest request) {
         Optional<UserProfile> userProfileOptional = profileRepository.findByUserId(userId);
         if(userProfileOptional.isEmpty()){
+            throw new ResourceNotFoundException("profile","userId", userId);
             // todo : throw resource not found exception
         }
         UserProfile profile = userProfileOptional.get();
@@ -107,6 +110,8 @@ public class ProfileService {
     public Boolean getProfileCompletionStatus(String userId) {
         Optional<UserProfile> userProfileOptional = profileRepository.findByUserId(userId);
         if(userProfileOptional.isEmpty()){
+            throw new ResourceNotFoundException("profile","userId", userId);
+
             // todo : throw resource not found exception
         }
         return userProfileOptional.get().getIsProfileCompleted();
@@ -115,6 +120,7 @@ public class ProfileService {
     public ProfileResponse getProfile(String userId) {
         Optional<UserProfile> userProfileOptional = profileRepository.findByUserId(userId);
         if(userProfileOptional.isEmpty()){
+            throw new ResourceNotFoundException("profile","userId", userId);
             // todo : throw resource not found exception
         }
         UserProfile profile = userProfileOptional.get();

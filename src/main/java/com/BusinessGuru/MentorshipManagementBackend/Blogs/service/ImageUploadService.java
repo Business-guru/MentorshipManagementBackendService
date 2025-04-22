@@ -1,5 +1,6 @@
 package com.BusinessGuru.MentorshipManagementBackend.Blogs.service;
 
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ApiException;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class ImageUploadService {
             Map data = this.cloudinary.uploader().upload(multipartFile.getBytes(), uploadOptions);
             return data;
         } catch (IOException e) {
-            throw new RuntimeException("Image upload failed: " + e.getMessage());
+            throw new ApiException("Image upload failed: " + e.getMessage());
         }
     }
 }

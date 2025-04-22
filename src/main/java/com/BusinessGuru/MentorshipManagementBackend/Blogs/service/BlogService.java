@@ -4,6 +4,8 @@ import com.BusinessGuru.MentorshipManagementBackend.Blogs.Dto.BlogDTOResponse;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.Dto.BlogDto;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.entities.Blog;
 import com.BusinessGuru.MentorshipManagementBackend.Blogs.repository.BlogRepository;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ApiException;
+import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ResourceNotFoundException;
 import com.BusinessGuru.MentorshipManagementBackend.repository.UserProfileRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -38,7 +40,7 @@ public class BlogService {
 
     public BlogDTOResponse createBlog(BlogDto blogDTO) {
         if(profileRepository.findByUserId(blogDTO.getUserId()).isEmpty()){
-            // todo throw ex
+            throw new ResourceNotFoundException("profile","userId", blogDTO.getUserId());
         }
         Blog blog = new Blog();
         blog.setUserId(blogDTO.getUserId());
@@ -51,7 +53,7 @@ public class BlogService {
         if (blogDTO.getImages()!=null && blogDTO.getImages().size() > 2) {
 
             // todo : throw appropriate exception
-//            throw new ApiException("only 2 images are allowed");
+            throw new ApiException("only 2 images are allowed");
         }
         if(blogDTO.getImages()!=null){
             for (MultipartFile image : blogDTO.getImages()) {
@@ -68,6 +70,7 @@ public class BlogService {
     public BlogDTOResponse getPostById(String postId) {
         Optional<Blog> blogOptional = blogRepository.findById(postId);
         if(blogOptional.isEmpty()){
+            throw new ResourceNotFoundException("blog","postId",postId);
             // throw post not found exception
         }
         Blog blog = blogOptional.get();
@@ -77,10 +80,12 @@ public class BlogService {
     public Boolean deletePost(String postId, String userId){
         Optional<Blog> blogOptional = blogRepository.findById(postId);
         if(blogOptional.isEmpty()){
+            throw new ResourceNotFoundException("blog","postId",postId);
             // throw post not found exception
         }
         Blog blog = blogOptional.get();
         if(!blog.getUserId().equals(userId)){
+            throw new ApiException("You are not permitted to do this operation");
             // throw unauthorized exception
         }
         blogRepository.delete(blog);
@@ -90,6 +95,7 @@ public class BlogService {
     public BlogDTOResponse likePost(String postId, Integer cnt) {
         Optional<Blog> blogOptional = blogRepository.findById(postId);
         if(blogOptional.isEmpty()){
+            throw new ResourceNotFoundException("blog","postId",postId);
             // throw post not found exception
         }
         Blog blog = blogOptional.get();
@@ -104,6 +110,7 @@ public class BlogService {
     public List<BlogDTOResponse> getAllBlogsOfUser(String userId) {
         List<Blog> blogList = blogRepository.findByUserId(userId);
         if(blogList.isEmpty()){
+            throw new ApiException("No blogs found");
             // throw exception
         }
         List<BlogDTOResponse> blogDTOResponseList = new ArrayList<>();
