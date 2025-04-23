@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/blogs")
+@RequestMapping("/api/v1/mentorship/blogs")
 public class BlogController {
     @Autowired
     private BlogService blogService;
