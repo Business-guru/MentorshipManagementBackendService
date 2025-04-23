@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/mentor")
+@RequestMapping("/api/v1/mentorship/mentor")
 public class MentorController {
 
     @Autowired
