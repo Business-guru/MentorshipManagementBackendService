@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 public class UserSyncDto {
     private String userId;
     private String email;
-    private String firstName;
-    private String lastName;
     private UserType userType;
 }

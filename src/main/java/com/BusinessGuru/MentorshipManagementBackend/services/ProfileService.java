@@ -7,6 +7,7 @@ import com.BusinessGuru.MentorshipManagementBackend.Dto.ProfileRequest;
 import com.BusinessGuru.MentorshipManagementBackend.commons.exceptions.ResourceNotFoundException;
 import com.BusinessGuru.MentorshipManagementBackend.entities.Experience;
 import com.BusinessGuru.MentorshipManagementBackend.entities.UserProfile;
+import com.BusinessGuru.MentorshipManagementBackend.enums.UserType;
 import com.BusinessGuru.MentorshipManagementBackend.repository.ExperienceRepository;
 import com.BusinessGuru.MentorshipManagementBackend.repository.UserProfileRepository;
 import org.modelmapper.ModelMapper;
@@ -34,10 +35,12 @@ public class ProfileService {
         UserProfile userProfile = new UserProfile();
         userProfile.setUserId(syncDto.getUserId());
         userProfile.setEmail(syncDto.getEmail());
-        userProfile.setUserType(syncDto.getUserType());
+        if(syncDto.getUserType().equals(UserType.MENTOR)){
+            userProfile.setUserType(UserType.MENTOR);
+        }else{
+            userProfile.setUserType(UserType.USER);
+        }
         userProfile.setIsProfileCompleted(false);
-        userProfile.setFirstName(syncDto.getFirstName());
-        userProfile.setLastName(syncDto.getLastName());
         profileRepository.save(userProfile);
         return true;
     }
@@ -65,6 +68,8 @@ public class ProfileService {
         profile.setAbout(request.getAbout());
         profile.setBio(request.getBio());
         profile.setSkills(request.getSkills());
+        profile.setFirstName(request.getFirstName());
+        profile.setLastName(request.getLastName());
 //        profile.setExperienceList(experienceList);
 
         profile.setIsProfileCompleted(true);
@@ -84,6 +89,12 @@ public class ProfileService {
             // todo : throw resource not found exception
         }
         UserProfile profile = userProfileOptional.get();
+        if(profile.getFirstName()!=null){
+            profile.setFirstName(request.getFirstName());
+        }
+        if(profile.getLastName()!=null){
+            profile.setLastName(request.getLastName());
+        }
         if (request.getAbout() != null) {
             profile.setAbout(request.getAbout());
         }

@@ -101,6 +101,7 @@ public class MentorshipService {
 
         MentorshipPlan plan = modelMapper.map(planDto, MentorshipPlan.class);
         plan.setCreatedBy(profile.get());
+        plan.setCurrentSlots(planDto.getTotalSlots());
 
         MentorshipPlan savedPlan = planRepository.save(plan);
 

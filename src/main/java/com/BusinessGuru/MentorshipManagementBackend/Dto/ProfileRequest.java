@@ -13,6 +13,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProfileRequest {
 
+    private String firstName;
+
+    private String lastName;
+
     private List<String> skills;
 
     private String about;
