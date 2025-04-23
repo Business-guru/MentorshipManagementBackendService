@@ -5,6 +5,7 @@ import com.BusinessGuru.MentorshipManagementBackend.Dto.PlanDto;
 import com.BusinessGuru.MentorshipManagementBackend.commons.ApiResponse;
 import com.BusinessGuru.MentorshipManagementBackend.commons.Meta;
 import com.BusinessGuru.MentorshipManagementBackend.entities.MentorshipPlan;
+import com.BusinessGuru.MentorshipManagementBackend.entities.UserProfile;
 import com.BusinessGuru.MentorshipManagementBackend.services.MentorshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,6 +71,14 @@ public class MentorController {
     ResponseEntity<ApiResponse<List<PlanDto>>> getAllSubscribedPlans( @RequestHeader(name = "x-user-id")String userId){
         List<PlanDto> planDtoList = mentorshipService.getAllSubscribedPlans(userId);
         ApiResponse<List<PlanDto>> response = new ApiResponse<>(new Meta("subscription added successfully",true),planDtoList);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/rateYourMentor/{mentorId}")
+    ResponseEntity<ApiResponse<UserProfile>> rateAMentor(@RequestParam(name = "rating") Double rating,
+                                                     @PathVariable(name = "mentorId") String mentorId){
+        UserProfile ratingResponse = mentorshipService.rateAMentor(rating,mentorId);
+        ApiResponse<UserProfile> response = new ApiResponse<>(new Meta("Rating added successfully",true),ratingResponse);
         return ResponseEntity.ok(response);
     }
 

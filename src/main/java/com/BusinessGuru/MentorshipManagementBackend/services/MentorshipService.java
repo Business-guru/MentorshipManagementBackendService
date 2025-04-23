@@ -150,4 +150,17 @@ public class MentorshipService {
         return planDtoList;
 
     }
+
+    public UserProfile rateAMentor(Double rating, String mentorId) {
+        Optional<UserProfile> profileOptional = profileRepository.findByUserId(mentorId);
+        if(profileOptional.isEmpty()){
+            throw new ResourceNotFoundException("mentor","mentorId",mentorId);
+        }
+        UserProfile userProfile = profileOptional.get();
+        userProfile.setAvgRating((userProfile.getAvgRating()+rating)/2);
+
+        UserProfile savedProfile = profileRepository.save(userProfile);
+        return savedProfile;
+
+    }
 }

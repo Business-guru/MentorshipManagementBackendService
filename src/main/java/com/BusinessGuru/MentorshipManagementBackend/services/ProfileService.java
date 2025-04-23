@@ -37,6 +37,7 @@ public class ProfileService {
         userProfile.setEmail(syncDto.getEmail());
         if(syncDto.getUserType().equals(UserType.MENTOR)){
             userProfile.setUserType(UserType.MENTOR);
+            userProfile.setAvgRating(4.9);
         }else{
             userProfile.setUserType(UserType.USER);
         }
